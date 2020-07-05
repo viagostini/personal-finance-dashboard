@@ -1,0 +1,8 @@
+version: '3'
+services:
+  api:
+    environment:
+      - MAX_WORKERS=1
+    build: .
+    ports:
+      - "80:80"
