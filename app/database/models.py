@@ -1,6 +1,7 @@
-from re import S
+from datetime import datetime
+
 from sqlalchemy.orm import relationship
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
 from .database import Base
 
@@ -11,17 +12,31 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
 
-    items = relationship('Item', back_populates='owner')
+    accounts = relationship('Account', back_populates='owner')
 
 
-class Item(Base):
-    __tablename__ = 'items'
+class Account(Base):
+    __tablename__ = 'accounts'
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
+    name = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey('users.id'))
 
-    owner = relationship('User', back_populates='items')
+    owner = relationship('User', back_populates='accounts')
+    transactions = relationship('Transaction', back_populates='account')
+
+
+class Transaction(Base):
+    __tablename__ = 'transactions'
+
+    id = Column(Integer, primary_key=True, index=True)
+    type = Column(String, default='expense')
+    value = Column(Integer, nullable=False)
+    title = Column(String, nullable=False, index=True)
+    description = Column(String)
+    category = Column(String, default='Other')
+    timestamp = Column(DateTime, default=datetime.now)
+    account_id = Column(Integer, ForeignKey('accounts.id'))
+
+    account = relationship('Account', back_populates='transactions')

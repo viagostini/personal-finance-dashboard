@@ -1,7 +1,8 @@
+from app.routers import transactions
 from fastapi import FastAPI
 
 from .database import models
-from .routers import items, users
+from .routers import transactions, accounts, users
 from .database.database import engine
 
 # creates the database tables
@@ -19,7 +20,12 @@ app.include_router(
     tags=["users"]
 )
 app.include_router(
-    items.router,
-    prefix="/items",
-    tags=["items"]
+    accounts.router,
+    prefix="/accounts",
+    tags=["accounts"]
+)
+app.include_router(
+    transactions.router,
+    prefix="/transactions",
+    tags=["transactions"]
 )

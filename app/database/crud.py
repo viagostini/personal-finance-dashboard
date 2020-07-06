@@ -1,3 +1,6 @@
+from decimal import Decimal
+
+from app.routers import transactions
 from sqlalchemy.orm import Session
 
 from ..schemas import schemas
@@ -28,15 +31,36 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 
-def get_items(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Item).offset(skip).limit(limit).all()
+def get_accounts(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Account).offset(skip).limit(limit).all()
 
 
-def create_item(db: Session, item: schemas.ItemCreate, user_id: int):
-    new_item = models.Item(**item.dict(), owner_id=user_id)
+def create_account(db: Session, account: schemas.AccountCreate, user_id: int):
+    new_account = models.Account(**account.dict(), owner_id=user_id)
     
-    db.add(new_item)
+    db.add(new_account)
     db.commit()
-    db.refresh(new_item)
+    db.refresh(new_account)
 
-    return new_item
+    return new_account
+
+
+def create_transaction(
+    db: Session, transaction: schemas.TransactionCreate, account_id: int
+):
+    def float_to_int(number: float) -> int:
+        return int(Decimal(str(number)) * 100)
+    
+    transaction_dict = transaction.dict()
+    transaction_dict['value'] = float_to_int(transaction_dict['value'])
+
+    new_transaction = models.Transaction(
+        **transaction_dict, account_id=account_id
+    )
+
+
+    db.add(new_transaction)
+    db.commit()
+    db.refresh(new_transaction)
+
+    return new_transaction

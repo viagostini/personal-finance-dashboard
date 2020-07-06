@@ -1,19 +1,61 @@
+from datetime import datetime
+
 from typing import List, Optional
 
 from pydantic import BaseModel
 
-class ItemBase(BaseModel):
+from ..database import models
+
+
+class TransactionBase(BaseModel):
     title: str
-    description: Optional[str] = None
+    value: float
+    description: Optional[str]
 
 
-class ItemCreate(ItemBase):
+class TransactionCreate(TransactionBase):
+    type: Optional[str]
+    category: Optional[str]
+    # timestamp: Optional[datetime]
+
+class Transaction(TransactionBase):
+    id: int
+    type: str
+    category: str
+    account_id: int
+    # timestamp: datetime
+
+    def from_orm(obj):
+        return Transaction(
+            id=obj.id,
+            title=obj.title,
+            description=obj.description,
+            category=obj.category,
+            type=obj.type,
+            account_id=obj.account_id,
+            # timestamp=obj.timestamp,
+            value=obj.value / 100
+        )
+
+    class Config:
+        orm_mode = True
+        orm_model = models.Transaction
+
+
+
+
+class AccountBase(BaseModel):
+    name: str
+
+
+class AccountCreate(AccountBase):
     pass
 
 
-class Item(ItemBase):
+class Account(AccountBase):
     id: int
     owner_id: int
+    transactions: List[Transaction]
 
     class Config:
         orm_mode = True
@@ -29,8 +71,8 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    is_active = bool
-    items: List[Item] = []
+    accounts: List[Account] = []
 
     class Config:
         orm_mode = True
+
