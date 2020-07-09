@@ -24,4 +24,5 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install requests
+        cd api
         pytest
