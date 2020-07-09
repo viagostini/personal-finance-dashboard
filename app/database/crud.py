@@ -64,3 +64,27 @@ def create_transaction(
     db.refresh(new_transaction)
 
     return new_transaction
+
+
+def get_transaction_by_id(db: Session, id: int):
+    print(f'ID = {id}')
+    return db.query(models.Transaction).filter(models.Transaction.id == id).first()
+
+def get_transactions_from_account(
+    db: Session,
+    account_id: int,
+    skip: int = 0,
+    limit:int = 100
+):
+    return (db.query(models.Transaction)
+              .filter(models.Transaction.account_id == account_id)
+              .offset(skip).limit(limit).all())
+
+
+def delete_transaction(db: Session, id: int):
+    transaction = get_transaction_by_id(db, id)
+    
+    db.delete(transaction)
+    db.commit()
+    
+    return transaction

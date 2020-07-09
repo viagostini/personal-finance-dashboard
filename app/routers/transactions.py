@@ -22,3 +22,27 @@ def create_transaction(
         transaction=transaction,
         account_id=account_id
     )
+
+
+@router.get('/', response_model=List[schemas.Transaction])
+def get_transactions_from_account(
+    account_id: int,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db)
+):
+    return crud.get_transactions_from_account(
+        db=db,
+        account_id=account_id,
+        skip=skip,
+        limit=limit
+    )
+
+@router.get('/{id}', response_model=schemas.Transaction)
+def get_transaction_by_id(id: int, db: Session = Depends(get_db)):
+    return crud.get_transaction_by_id(db=db, id=id)
+
+
+@router.delete('/{id}', response_model=schemas.Transaction)
+def delete_transaction(id: int, db: Session = Depends(get_db)):
+    return crud.delete_transaction(db=db, id=id)
