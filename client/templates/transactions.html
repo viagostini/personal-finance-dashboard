@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<body>
+    <h2>Transactions for User {{user.id}}</h2>
+    {% for account in user.accounts %}
+    <h2>{{ account.name }}</h2>
+    <table>
+        <th>Title</th>
+        <th>Value</th>
+        <th>Type</th>
+        {% for transaction in account.transactions %}
+        <tr>
+            <td>{{ transaction.title }}</td>
+            <td>{{ transaction.value }}</td>
+            <td>{{ transaction.type }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+</body>
+{% endblock %}

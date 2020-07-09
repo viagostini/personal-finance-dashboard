@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<body>
+    <table>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}: {{ user.email }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+{% endblock %}
