@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% set account_id = request.query_params['account_id'] %}
+{% set action = "/transactions/?account_id=" ~ account_id %}
+<form action={{action}} method='POST'>
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title"><br>
+
+    <label for="value">Value:</label><br>
+    <input type="number" step="0.01" id="value" name="value"><br>
+
+    <label for="description">Description:</label><br>
+    <input type="text" id="description" name="description"><br>
+
+    <label for="category">Category:</label><br>
+    <input type="text" id="category" value="Other" name="category"><br>
+
+    <label for="type">Type:</label><br>
+    <input type="radio" id="expense" name="type" value="expense" checked>
+    <label for="expense">Expense</label><br>
+
+    <input type="radio" id="earning" name="type" value="earning">
+    <label for="earning">Earning</label><br>
+
+    <input type="submit" value="Submit">
+</form> 
+
+{% endblock %}

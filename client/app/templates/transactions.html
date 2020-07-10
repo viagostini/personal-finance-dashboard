@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<body>
+    <h2>Transactions for User {{user.id}}</h2>
+    {% for account in user.accounts %}
+    <table>
+        <tr>
+            <td><h2>{{ account.name }}</h2></td>
+            <td>
+                {% set action = "/transactions/new/?account_id=" ~ account.id %}
+                <a href={{action}}>New Transaction</a>
+
+        </tr>
+        <th>Title</th>
+        <th>Value</th>
+        <th>Category</th>
+        <th>Type</th>
+        <th></th>
+        {% for transaction in account.transactions %}
+        <tr>
+            <td>{{ transaction.title }}</td>
+            <td>{{ transaction.value }}</td>
+            <td>{{ transaction.category }}</td>
+            <td>{{ transaction.type }}</td>
+
+            <td>
+                {% set action = "/transactions/" ~ transaction.id %}
+                <form action={{action}} method="POST">
+                    <input type="submit" name="delete" value="Delete" />
+                </form>            
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+</body>
+{% endblock %}
